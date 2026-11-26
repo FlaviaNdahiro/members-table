@@ -15,30 +15,24 @@ export async function fetchUsers({
   const skip = (page - 1) * pageSize;
 
   let endpoint = "/users";
+
   let params = {
     limit: pageSize,
     skip,
     select: FIELDS,
+    sortBy,
+    order,
   };
 
   if (q.trim()) {
     endpoint = "/users/search";
-    params = {
-      ...params,
-      q: q.trim(),
-    };
+
+    params.q = q.trim();
   } else if (gender) {
     endpoint = "/users/filter";
-    params = {
-      ...params,
-      key: "gender",
-      value: gender,
-    };
-  }
 
-  if (!q.trim() && !gender) {
-    params.sortBy = sortBy;
-    params.order = order;
+    params.key = "gender";
+    params.value = gender;
   }
 
   const response = await api.get(endpoint, { params });
